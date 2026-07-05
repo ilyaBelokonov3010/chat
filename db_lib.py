@@ -1,14 +1,10 @@
-import pickle, json, secrets
-from datetime import datetime, timezone
-
-def login_session():
-    pass
+import pickle, json, secrets, time
 
 class Session:
     def __init__(self, id, user):
         self.id = id
         self.user = user
-        self.date_regestration = datetime.now(timezone.utc)
+        self.date_regestration = time.time()
 
 class User:
     def __init__(self, id, name, password, sessions:list[Session]):
@@ -16,25 +12,37 @@ class User:
         self.name = name
         self.password = password
         self.sessions = sessions
+        self.messages = []
 
 class db:
     def __init__(self):
-        try:
+        try: # sessions
             with open("db_sessions.pkl", "rb") as file: # read binary
                 self.sessions: dict[str, Session] = pickle.load(file)
         except (EOFError, FileNotFoundError):
             with open("db_sessions.pkl", "rb") as file: # read binary
-                self.sessions: dict[str, Session] = {}
-        try:
+                self.sessions: dict[str, Session] = {} # dict[token_hex(32), Session]
+        try: # users
             with open("db_users.pkl", "rb") as file: # read binary
                 self.users: list[User] = pickle.load(file)
         except (EOFError, FileNotFoundError):
             with open("db_users.pkl", "rb") as file: # read binary
                 self.users: list[User] = []
+        try: # messages
+            with open("db_sessions.pkl", "rb") as file: # read binary
+                self.messages: dict[int, tuple[str, int, float]] = pickle.load(file) # dict[id, tuple[message, user id, unix time]]
+        except (EOFError, FileNotFoundError):
+            with open("db_sessions.pkl", "rb") as file: # read binary
+                self.messages: dict[int, tuple[str, int, float]] = {}
 
     def save(self):
+        print('Saving db...')
         with open("db_sessions.pkl", "wb") as file: # write binary
             pickle.dump(self.sessions, file) 
+        with open("db_users.pkl", "wb") as file: # write binary
+            pickle.dump(self.users, file)
+        with open("db_messages.pkl", "wb") as file: # write binary
+            pickle.dump(self.messages, file)
 
     def login(self, username, password):
         for user in self.Users:
@@ -45,5 +53,10 @@ class db:
                 return new_session.id
         return None
     
+    def login_session(self):
+        for i in self.sessions:
+            if i
+    '''
     def render_messages(self):
-        
+        for message in self.messages
+    '''

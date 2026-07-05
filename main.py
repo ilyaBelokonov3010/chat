@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, make_response
-import pickle, json, db_lib
+import pickle, json, db_lib, atexit, sys, signal
 
 app = Flask(__name__)
-
 db = db_lib.db()
+atexit.register(db.save)
+signal.signal(signal.SIGINT, db.save)
+signal.signal(signal.SIGTERM, db.save)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
