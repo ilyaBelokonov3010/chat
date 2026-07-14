@@ -1,5 +1,5 @@
 import pickle, json, secrets, time
-
+from flask import render_template
 class Session:
     def __init__(self, id, user):
         self.id = id
@@ -18,7 +18,7 @@ class db:
     def __init__(self):
         try: # sessions
             with open("db_sessions.pkl", "rb") as file: # read binary
-                self.sessions: dict[str, Session] = pickle.load(file)
+                self.sessions: dict[str, Session] = pickle.load(file) # dict[token_hex(32), Session]
         except (EOFError, FileNotFoundError):
             with open("db_sessions.pkl", "rb") as file: # read binary
                 self.sessions: dict[str, Session] = {} # dict[token_hex(32), Session]
@@ -53,10 +53,13 @@ class db:
                 return new_session.id
         return None
     
-    def login_session(self):
-        for i in self.sessions:
-            if i
-    '''
+    def login_session(self, token):
+        session = self.sessions.get(token)
+        if session:
+            return session
+        return None
+
     def render_messages(self):
-        for message in self.messages
-    '''
+        temp_render = ''
+        for message in self.messages:
+            temp_render += render_template
