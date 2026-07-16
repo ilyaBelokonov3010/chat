@@ -3,7 +3,7 @@ from flask import render_template
 class Session:
     def __init__(self, id, user):
         self.id = id
-        self.user = user
+        self.user = user # user object
         self.date_regestration = time.time()
 
 class User:
@@ -33,7 +33,7 @@ class db:
                 self.messages: dict[int, tuple[str, int, float]] = pickle.load(file) # dict[id, tuple[message, user id, unix time]]
         except (EOFError, FileNotFoundError):
             with open("db_sessions.pkl", "rb") as file: # read binary
-                self.messages: dict[int, tuple[str, int, float]] = {}
+                self.messages: dict[int, tuple[str, int, float]] = {} # dict[id, tuple[message, user id, unix time]]
 
     def save(self):
         print('Saving db...')
@@ -53,7 +53,7 @@ class db:
                 return new_session.id
         return None
     
-    def login_session(self, token):
+    def get_session(self, token):
         session = self.sessions.get(token)
         if session:
             return session
@@ -62,4 +62,4 @@ class db:
     def render_messages(self):
         temp_render = ''
         for message in self.messages:
-            temp_render += render_template
+            temp_render += render_template('message.html', name = message[1][1], message = message[1][1])
