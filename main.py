@@ -28,7 +28,7 @@ def login():
         if result == None:
             response = render_template('login.html', additionally = '<p style="color: red;">Wrong username or password</p>')
         else:
-            response = make_response(render_template('main.py', additionally = db.render_messages))
+            response = make_response(render_template('main.html', additionally = db.render_messages))
     
     response.set_cookie('session', username, max_age=31536000, httponly=True)
     
