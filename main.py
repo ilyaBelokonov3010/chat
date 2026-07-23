@@ -4,6 +4,8 @@ import pickle, json, db_lib, atexit, sys, signal, time
 app = Flask(__name__)
 db = db_lib.db()
 
+admin_console_pass = 'a\)56dj0}#E4yuyEB'
+
 def safe_exit_handler(signum=None, frame=None):
     print("\n[СИСТЕМА] Сохранение базы данных перед выходом...")
     db.save()
@@ -59,5 +61,14 @@ def request_processing():
         if session_id:
             return render_template('main.html', additionally = db.render_messages, account =  db.get_session(session_id).user)
         return redirect('/login')
+
+@app.route('/admincontrol', methods=['GET', 'POST'])
+def request_processing():
+   if request.method == 'POST':
+        token = request.headers.get("X-Admin-Token")
+        if token == "MIL$|7*kHN93":
+            command = request.get_json().get("command")
+            print('command: {command_text}')
+            
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
